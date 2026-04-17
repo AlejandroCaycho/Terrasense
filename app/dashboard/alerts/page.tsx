@@ -291,13 +291,13 @@ export default function AlertsPage() {
 
         {/* Stats Cards */}
         <div className="flex-shrink-0 grid grid-cols-4 gap-2 px-6 py-3 border-b border-border">
-          <Card className="border-0 bg-card/80 p-3 shadow-sm relative">
+          <Card className="border border-border bg-card/80 p-3 shadow-sm relative">
             <div className="flex items-center gap-2">
               <div className="rounded-lg bg-destructive/20 p-1.5 flex-shrink-0">
                 <XCircle className="h-4 w-4 text-destructive" />
               </div>
               <div>
-                <p className="text-xs text-muted-foreground">Criticas</p>
+                <p className="text-xs text-foreground">Criticas</p>
                 <p className="text-lg font-bold text-foreground">{criticalCount}</p>
               </div>
             </div>
@@ -306,37 +306,37 @@ export default function AlertsPage() {
             )}
           </Card>
           
-          <Card className="border-0 bg-card/80 p-3 shadow-sm">
+          <Card className="border border-border bg-card/80 p-3 shadow-sm">
             <div className="flex items-center gap-2">
               <div className="rounded-lg bg-accent/20 p-1.5 flex-shrink-0">
                 <AlertTriangle className="h-4 w-4 text-accent" />
               </div>
               <div>
-                <p className="text-xs text-muted-foreground">Advertencias</p>
+                <p className="text-xs text-foreground">Advertencias</p>
                 <p className="text-lg font-bold text-foreground">{warningCount}</p>
               </div>
             </div>
           </Card>
           
-          <Card className="border-0 bg-card/80 p-3 shadow-sm">
+          <Card className="border border-border bg-card/80 p-3 shadow-sm">
             <div className="flex items-center gap-2">
               <div className="rounded-lg bg-secondary/20 p-1.5 flex-shrink-0">
                 <Bell className="h-4 w-4 text-secondary" />
               </div>
               <div>
-                <p className="text-xs text-muted-foreground">Informativas</p>
+                <p className="text-xs text-foreground">Informativas</p>
                 <p className="text-lg font-bold text-foreground">{infoCount}</p>
               </div>
             </div>
           </Card>
 
-          <Card className="border-0 bg-card/80 p-3 shadow-sm">
+          <Card className="border border-border bg-card/80 p-3 shadow-sm">
             <div className="flex items-center gap-2">
               <div className="rounded-lg bg-primary/20 p-1.5 flex-shrink-0">
                 <Shield className="h-4 w-4 text-primary" />
               </div>
               <div>
-                <p className="text-xs text-muted-foreground">Sistema estable</p>
+                <p className="text-xs text-foreground">Sistema estable</p>
                 <p className="text-lg font-bold text-foreground">98%</p>
               </div>
             </div>
