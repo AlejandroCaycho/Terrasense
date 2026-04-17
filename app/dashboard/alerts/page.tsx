@@ -211,49 +211,24 @@ export default function AlertsPage() {
   const getAlertColors = (type: string) => {
     switch (type) {
       case 'critical': return { 
-        bg: 'bg-gradient-to-r from-red-500/20 via-red-500/10 to-transparent', 
-        border: 'border-red-500/50',
-        borderLeft: 'border-l-4 border-l-red-500',
-        icon: 'text-red-500 bg-red-500/20 shadow-lg shadow-red-500/20',
-        badge: 'bg-red-500 text-white shadow-md shadow-red-500/30',
-        glow: 'shadow-lg shadow-red-500/10 hover:shadow-red-500/20',
-        text: 'text-red-400'
+        icon: 'text-red-500 bg-red-500/20',
+        badge: 'bg-red-500/20 text-red-500'
       }
       case 'warning': return { 
-        bg: 'bg-gradient-to-r from-amber-500/20 via-amber-500/10 to-transparent', 
-        border: 'border-amber-500/50',
-        borderLeft: 'border-l-4 border-l-amber-500',
-        icon: 'text-amber-500 bg-amber-500/20 shadow-lg shadow-amber-500/20',
-        badge: 'bg-amber-500 text-white shadow-md shadow-amber-500/30',
-        glow: 'shadow-lg shadow-amber-500/10 hover:shadow-amber-500/20',
-        text: 'text-amber-400'
+        icon: 'text-amber-500 bg-amber-500/20',
+        badge: 'bg-amber-500/20 text-amber-500'
       }
       case 'info': return { 
-        bg: 'bg-gradient-to-r from-blue-500/15 via-blue-500/5 to-transparent', 
-        border: 'border-blue-500/30',
-        borderLeft: 'border-l-4 border-l-blue-500',
         icon: 'text-blue-500 bg-blue-500/20',
-        badge: 'bg-blue-500 text-white',
-        glow: 'hover:shadow-md hover:shadow-blue-500/10',
-        text: 'text-blue-400'
+        badge: 'bg-blue-500/20 text-blue-500'
       }
       case 'success': return { 
-        bg: 'bg-gradient-to-r from-emerald-500/15 via-emerald-500/5 to-transparent', 
-        border: 'border-emerald-500/30',
-        borderLeft: 'border-l-4 border-l-emerald-500',
         icon: 'text-emerald-500 bg-emerald-500/20',
-        badge: 'bg-emerald-500 text-white',
-        glow: 'hover:shadow-md hover:shadow-emerald-500/10',
-        text: 'text-emerald-400'
+        badge: 'bg-emerald-500/20 text-emerald-500'
       }
       default: return { 
-        bg: 'bg-muted', 
-        border: 'border-border',
-        borderLeft: '',
         icon: 'text-muted-foreground bg-muted',
-        badge: 'bg-muted text-muted-foreground',
-        glow: '',
-        text: 'text-muted-foreground'
+        badge: 'bg-muted text-muted-foreground'
       }
     }
   }
