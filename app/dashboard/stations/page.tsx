@@ -160,11 +160,11 @@ export default function StationsPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-background">
+    <div className="h-screen bg-background flex flex-col overflow-hidden p-3 gap-2">
       {/* Toast Notifications */}
       {showToast && (
         <div
-          className={`fixed right-6 top-24 rounded-lg px-4 py-3 text-sm font-semibold shadow-lg z-50 animate-in fade-in slide-in-from-right-4 ${
+          className={`fixed right-4 top-4 rounded-lg px-4 py-3 text-sm font-semibold shadow-lg z-50 animate-in fade-in slide-in-from-right-4 ${
             toastType === 'success' 
               ? 'bg-primary text-primary-foreground' 
               : 'bg-destructive text-destructive-foreground'
@@ -175,158 +175,129 @@ export default function StationsPage() {
       )}
 
       {/* Header */}
-      <div className="border-b border-border bg-card/50 backdrop-blur-sm px-6 py-3 sticky top-0 z-20">
-        <div className="flex items-center justify-between gap-4">
-          <div>
-            <h1 className="text-sm font-semibold text-foreground">
-              Estaciones Climáticas
-            </h1>
-            <p className="text-xs text-muted-foreground">
-              {filteredStations.length} estaciones disponibles
-            </p>
-          </div>
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              onClick={handleExport}
-              disabled={isLoading}
-              className="gap-1 h-8 text-xs"
-            >
-              <Download className="h-3 w-3" />
-              Exportar
-            </Button>
-            <Button
-              onClick={() => setIsCreateModalOpen(true)}
-              className="gap-1 h-8 text-xs"
-            >
-              <Plus className="h-3 w-3" />
-              Nuevo
-            </Button>
-          </div>
+      <div className="flex items-center justify-between flex-shrink-0">
+        <div>
+          <h1 className="text-sm font-semibold text-foreground">Estaciones Climaticas</h1>
+          <p className="text-xs text-muted-foreground">{filteredStations.length} estaciones disponibles</p>
+        </div>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={handleExport} disabled={isLoading} className="gap-1 h-7 text-xs">
+            <Download className="h-3 w-3" />
+            Exportar
+          </Button>
+          <Button onClick={() => setIsCreateModalOpen(true)} className="gap-1 h-7 text-xs">
+            <Plus className="h-3 w-3" />
+            Nueva
+          </Button>
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="flex-1 p-4 space-y-3 overflow-auto">
-        {/* Filters Card - Compact */}
-        <Card className="border-0 bg-card/50 backdrop-blur-sm p-2.5 shadow-sm">
-          <div className="grid gap-2 grid-cols-4">
-            <div className="col-span-2">
-              <div className="relative">
-                <Search className="absolute left-2 top-1/2 h-3 w-3 -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  placeholder="Buscar..."
-                  value={searchTerm}
-                  onChange={(e) => {
-                    setSearchTerm(e.target.value)
-                    setCurrentPage(1)
-                  }}
-                  className="pl-7 h-8 text-xs"
-                />
-              </div>
-            </div>
-            <div>
-              <select
-                value={filterLocation}
-                onChange={(e) => {
-                  setFilterLocation(e.target.value)
-                  setCurrentPage(1)
-                }}
-                className="w-full h-8 rounded-lg border border-input bg-background px-2 text-xs text-foreground"
-              >
-                <option value="">Todas</option>
-                {uniqueLocations.map((loc) => (
-                  <option key={loc} value={loc}>
-                    {loc}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="flex items-center justify-end">
-              <p className="text-xs font-semibold text-primary">{filteredStations.length} registros</p>
-            </div>
+      {/* Filters */}
+      <Card className="border-0 bg-card/50 p-2.5 shadow-sm flex-shrink-0">
+        <div className="grid gap-2 grid-cols-4">
+          <div className="col-span-2 relative">
+            <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              placeholder="Buscar estacion..."
+              value={searchTerm}
+              onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1) }}
+              className="pl-8 h-8 text-sm"
+            />
           </div>
-        </Card>
+          <select
+            value={filterLocation}
+            onChange={(e) => { setFilterLocation(e.target.value); setCurrentPage(1) }}
+            className="h-8 rounded-lg border border-input bg-background px-3 text-sm text-foreground"
+          >
+            <option value="">Todas las ubicaciones</option>
+            {uniqueLocations.map((loc) => (
+              <option key={loc} value={loc}>{loc}</option>
+            ))}
+          </select>
+          <div className="flex items-center justify-end">
+            <span className="text-sm font-medium text-primary">{filteredStations.length} registros</span>
+          </div>
+        </div>
+      </Card>
 
-        {/* Table Card - Compact */}
-        <Card className="border-0 bg-card/50 backdrop-blur-sm shadow-sm overflow-hidden flex-1 min-h-0 flex flex-col">
-          <div className="overflow-x-auto overflow-y-auto flex-1">
-            <table className="w-full text-xs">
-              <thead className="border-b border-border bg-muted/40 sticky top-0">
-                <tr>
-                  <th className="px-3 py-2 text-left font-semibold text-muted-foreground">Estación</th>
-                  <th className="px-3 py-2 text-left font-semibold text-muted-foreground">Ubicación</th>
-                  <th className="px-3 py-2 text-left font-semibold text-muted-foreground">Latitud</th>
-                  <th className="px-3 py-2 text-left font-semibold text-muted-foreground">Longitud</th>
-                  <th className="px-3 py-2 text-left font-semibold text-muted-foreground">Alt.</th>
-                  <th className="px-3 py-2 text-right font-semibold text-muted-foreground">Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {paginatedStations.length > 0 ? (
-                  paginatedStations.map((station) => (
-                    <tr key={station.id} className="border-b border-border/50 hover:bg-primary/5 transition-colors">
-                      <td className="px-3 py-2 font-medium text-foreground">{station.name}</td>
-                      <td className="px-3 py-2 text-muted-foreground">{station.location}</td>
-                      <td className="px-3 py-2 text-muted-foreground">{station.latitude.toFixed(2)}</td>
-                      <td className="px-3 py-2 text-muted-foreground">{station.longitude.toFixed(2)}</td>
-                      <td className="px-3 py-2 text-muted-foreground">{station.altitude}m</td>
-                      <td className="px-3 py-2 text-right">
-                        <div className="flex items-center justify-end gap-0.5">
-                          <button onClick={() => openDetailDrawer(station)} className="p-1 hover:bg-primary/20 rounded transition-colors">
-                            <Eye className="h-3 w-3 text-primary" />
-                          </button>
-                          <button onClick={() => openEditModal(station)} className="p-1 hover:bg-secondary/20 rounded transition-colors">
-                            <Edit2 className="h-3 w-3 text-secondary" />
-                          </button>
-                          <button onClick={() => openDeleteConfirm(station)} className="p-1 hover:bg-destructive/20 rounded transition-colors">
-                            <Trash2 className="h-3 w-3 text-destructive" />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan={6} className="px-3 py-8 text-center text-muted-foreground">
-                      No hay estaciones
+      {/* Table */}
+      <Card className="border-0 bg-card/50 shadow-sm flex-1 min-h-0 flex flex-col overflow-hidden">
+        <div className="overflow-auto flex-1">
+          <table className="w-full text-sm">
+            <thead className="border-b border-border bg-muted/30 sticky top-0">
+              <tr>
+                <th className="px-4 py-3 text-left font-semibold text-muted-foreground">Estacion</th>
+                <th className="px-4 py-3 text-left font-semibold text-muted-foreground">Ubicacion</th>
+                <th className="px-4 py-3 text-left font-semibold text-muted-foreground">Latitud</th>
+                <th className="px-4 py-3 text-left font-semibold text-muted-foreground">Longitud</th>
+                <th className="px-4 py-3 text-left font-semibold text-muted-foreground">Altitud</th>
+                <th className="px-4 py-3 text-right font-semibold text-muted-foreground">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {paginatedStations.length > 0 ? (
+                paginatedStations.map((station) => (
+                  <tr key={station.id} className="border-b border-border/50 hover:bg-primary/5 transition-colors">
+                    <td className="px-4 py-3 font-medium text-foreground">{station.name}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{station.location}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{station.latitude.toFixed(4)}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{station.longitude.toFixed(4)}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{station.altitude}m</td>
+                    <td className="px-4 py-3 text-right">
+                      <div className="flex items-center justify-end gap-1">
+                        <button onClick={() => openDetailDrawer(station)} className="p-1.5 hover:bg-primary/20 rounded-lg transition-colors">
+                          <Eye className="h-4 w-4 text-primary" />
+                        </button>
+                        <button onClick={() => openEditModal(station)} className="p-1.5 hover:bg-secondary/20 rounded-lg transition-colors">
+                          <Edit2 className="h-4 w-4 text-secondary" />
+                        </button>
+                        <button onClick={() => openDeleteConfirm(station)} className="p-1.5 hover:bg-destructive/20 rounded-lg transition-colors">
+                          <Trash2 className="h-4 w-4 text-destructive" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={6} className="px-4 py-12 text-center text-muted-foreground">
+                    No se encontraron estaciones
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
 
-          {/* Pagination - Compact */}
-          {totalPages > 1 && (
-            <div className="flex items-center justify-between border-t border-border/50 px-3 py-2 bg-muted/20">
-              <p className="text-xs font-semibold">
-                Pág <span className="text-primary">{currentPage}</span>/{totalPages}
-              </p>
-              <div className="flex gap-1">
-                <Button
-                  variant="outline"
-                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                  disabled={currentPage === 1}
-                  size="sm"
-                  className="h-7 text-xs px-2"
-                >
-                  Ant
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                  disabled={currentPage === totalPages}
-                  size="sm"
-                  className="h-7 text-xs px-2"
-                >
-                  Sig
-                </Button>
-              </div>
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-between border-t border-border/50 px-4 py-2.5 bg-muted/20 flex-shrink-0">
+            <p className="text-sm font-medium">
+              Pagina <span className="text-primary">{currentPage}</span> de {totalPages}
+            </p>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                size="sm"
+                className="h-8 text-sm px-3"
+              >
+                Anterior
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages}
+                size="sm"
+                className="h-8 text-sm px-3"
+              >
+                Siguiente
+              </Button>
             </div>
-          )}
-        </Card>
-      </div>
+          </div>
+        )}
+      </Card>
 
       {/* Create Modal */}
       <Modal
