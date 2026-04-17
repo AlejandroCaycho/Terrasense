@@ -17,7 +17,7 @@ import {
   LineChart,
   Table,
   FileSpreadsheet,
-  FilePdf,
+  File,
   ChevronRight,
   Plus,
   Thermometer,
@@ -281,7 +281,7 @@ export default function ReportsPage() {
 
   const getFormatIcon = (format: string) => {
     switch (format) {
-      case 'pdf': return FilePdf
+      case 'pdf': return File
       case 'xlsx': return FileSpreadsheet
       case 'csv': return Table
       default: return FileText
