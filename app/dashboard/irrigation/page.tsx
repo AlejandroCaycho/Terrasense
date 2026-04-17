@@ -7,14 +7,12 @@ import {
   Clock, 
   Calendar,
   Timer,
-  TrendingUp,
   TrendingDown,
   AlertTriangle,
   Settings,
   Play,
   Pause,
   RotateCcw,
-  Zap,
   Thermometer,
   Sun,
   Cloud,
@@ -26,7 +24,8 @@ import {
   Trash2,
   History,
   Target,
-  Gauge
+  Gauge,
+  Zap
 } from 'lucide-react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -69,7 +68,7 @@ const initialZones = [
     isRunning: true,
     soilMoisture: 65,
     targetMoisture: 70,
-    lastIrrigation: '2h ago',
+    lastIrrigation: '2h',
     nextIrrigation: '4h',
     duration: 45,
     remainingTime: 28,
@@ -87,7 +86,7 @@ const initialZones = [
     isRunning: false,
     soilMoisture: 72,
     targetMoisture: 75,
-    lastIrrigation: '5h ago',
+    lastIrrigation: '5h',
     nextIrrigation: '1h',
     duration: 30,
     remainingTime: 0,
@@ -105,7 +104,7 @@ const initialZones = [
     isRunning: false,
     soilMoisture: 48,
     targetMoisture: 65,
-    lastIrrigation: '12h ago',
+    lastIrrigation: '12h',
     nextIrrigation: '30m',
     duration: 60,
     remainingTime: 0,
@@ -123,7 +122,7 @@ const initialZones = [
     isRunning: false,
     soilMoisture: 68,
     targetMoisture: 70,
-    lastIrrigation: '3h ago',
+    lastIrrigation: '3h',
     nextIrrigation: '5h',
     duration: 35,
     remainingTime: 0,
@@ -141,7 +140,7 @@ const initialZones = [
     isRunning: true,
     soilMoisture: 62,
     targetMoisture: 72,
-    lastIrrigation: '1h ago',
+    lastIrrigation: '1h',
     nextIrrigation: '3h',
     duration: 25,
     remainingTime: 12,
@@ -159,7 +158,7 @@ const initialZones = [
     isRunning: false,
     soilMoisture: 58,
     targetMoisture: 60,
-    lastIrrigation: '6h ago',
+    lastIrrigation: '6h',
     nextIrrigation: 'Pausado',
     duration: 20,
     remainingTime: 0,
@@ -236,91 +235,91 @@ export default function IrrigationPage() {
   const warningZones = zones.filter(z => z.status === 'warning').length
 
   return (
-    <div className="h-full flex flex-col bg-background overflow-hidden p-3 gap-3">
+    <div className="h-full flex flex-col bg-background overflow-hidden p-3 gap-2">
       {/* Header */}
       <div className="flex items-center justify-between flex-shrink-0">
-        <div className="flex items-center gap-3">
-          <div className="p-2 rounded-lg bg-secondary/10">
-            <Droplets className="h-5 w-5 text-secondary" />
+        <div className="flex items-center gap-2">
+          <div className="p-1.5 rounded-lg bg-secondary/10">
+            <Droplets className="h-4 w-4 text-secondary" />
           </div>
           <div>
-            <h1 className="text-lg font-semibold text-foreground">Sistema de Riego</h1>
-            <p className="text-xs text-muted-foreground">Control y monitoreo de irrigacion</p>
+            <h1 className="text-sm font-semibold text-foreground">Sistema de Riego</h1>
+            <p className="text-xs text-muted-foreground">Control y monitoreo</p>
           </div>
         </div>
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-card border border-border">
-            <span className="text-xs text-muted-foreground">Modo Auto</span>
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 px-2 py-1 rounded-lg bg-card border border-border">
+            <span className="text-xs text-muted-foreground">Auto</span>
             <Switch 
               checked={autoMode} 
               onCheckedChange={setAutoMode}
-              className="data-[state=checked]:bg-primary"
+              className="data-[state=checked]:bg-primary h-4 w-7"
             />
           </div>
           <Dialog open={isScheduleDialogOpen} onOpenChange={setIsScheduleDialogOpen}>
             <DialogTrigger asChild>
-              <Button variant="outline" size="sm" className="h-9">
-                <Calendar className="h-4 w-4 mr-2" />
+              <Button variant="outline" size="sm" className="h-7 text-xs">
+                <Calendar className="h-3 w-3 mr-1" />
                 Programar
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="sm:max-w-[400px]">
               <DialogHeader>
-                <DialogTitle>Programar Riego</DialogTitle>
-                <DialogDescription>
-                  Configura el horario de riego para las zonas seleccionadas.
+                <DialogTitle className="text-sm">Programar Riego</DialogTitle>
+                <DialogDescription className="text-xs">
+                  Configura el horario de riego para las zonas.
                 </DialogDescription>
               </DialogHeader>
-              <div className="grid gap-4 py-4">
-                <div className="grid gap-2">
-                  <Label htmlFor="zone">Zona</Label>
+              <div className="grid gap-3 py-3">
+                <div className="grid gap-1.5">
+                  <Label htmlFor="zone" className="text-xs">Zona</Label>
                   <Select>
-                    <SelectTrigger>
+                    <SelectTrigger className="h-8 text-xs">
                       <SelectValue placeholder="Seleccionar zona" />
                     </SelectTrigger>
                     <SelectContent>
                       {zones.map(zone => (
-                        <SelectItem key={zone.id} value={zone.id}>
+                        <SelectItem key={zone.id} value={zone.id} className="text-xs">
                           {zone.name} - {zone.crop}
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="preset">Preset</Label>
+                <div className="grid gap-1.5">
+                  <Label htmlFor="preset" className="text-xs">Preset</Label>
                   <Select>
-                    <SelectTrigger>
+                    <SelectTrigger className="h-8 text-xs">
                       <SelectValue placeholder="Seleccionar preset" />
                     </SelectTrigger>
                     <SelectContent>
                       {schedulePresets.map(preset => (
-                        <SelectItem key={preset.id} value={preset.id.toString()}>
+                        <SelectItem key={preset.id} value={preset.id.toString()} className="text-xs">
                           {preset.name} ({preset.times})
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="grid gap-2">
-                    <Label htmlFor="startTime">Hora Inicio</Label>
-                    <Input id="startTime" type="time" defaultValue="06:00" />
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="grid gap-1.5">
+                    <Label htmlFor="startTime" className="text-xs">Hora Inicio</Label>
+                    <Input id="startTime" type="time" defaultValue="06:00" className="h-8 text-xs" />
                   </div>
-                  <div className="grid gap-2">
-                    <Label htmlFor="duration">Duracion (min)</Label>
-                    <Input id="duration" type="number" defaultValue="30" />
+                  <div className="grid gap-1.5">
+                    <Label htmlFor="duration" className="text-xs">Duracion (min)</Label>
+                    <Input id="duration" type="number" defaultValue="30" className="h-8 text-xs" />
                   </div>
                 </div>
-                <div className="grid gap-2">
-                  <Label>Dias</Label>
+                <div className="grid gap-1.5">
+                  <Label className="text-xs">Dias</Label>
                   <div className="flex gap-1">
                     {['L', 'M', 'X', 'J', 'V', 'S', 'D'].map((day, i) => (
                       <Button
                         key={day}
                         variant={i < 5 ? 'default' : 'outline'}
                         size="sm"
-                        className="w-9 h-9 p-0"
+                        className="w-7 h-7 p-0 text-xs"
                       >
                         {day}
                       </Button>
@@ -329,125 +328,126 @@ export default function IrrigationPage() {
                 </div>
               </div>
               <DialogFooter>
-                <Button variant="outline" onClick={() => setIsScheduleDialogOpen(false)}>
+                <Button variant="outline" size="sm" className="h-7 text-xs" onClick={() => setIsScheduleDialogOpen(false)}>
                   Cancelar
                 </Button>
-                <Button onClick={() => setIsScheduleDialogOpen(false)}>
-                  Guardar Programa
+                <Button size="sm" className="h-7 text-xs" onClick={() => setIsScheduleDialogOpen(false)}>
+                  Guardar
                 </Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
-          <Button size="sm" className="h-9">
-            <Plus className="h-4 w-4 mr-2" />
+          <Button size="sm" className="h-7 text-xs">
+            <Plus className="h-3 w-3 mr-1" />
             Nueva Zona
           </Button>
         </div>
       </div>
 
       {/* Stats Row */}
-      <div className="grid grid-cols-4 gap-3 flex-shrink-0">
-        <Card className="p-3 border-border bg-card/50">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-primary/10">
-              <Activity className="h-5 w-5 text-primary" />
+      <div className="grid grid-cols-4 gap-2 flex-shrink-0">
+        <Card className="p-2.5 border-0 bg-card/80 shadow-sm">
+          <div className="flex items-center gap-2">
+            <div className="p-1.5 rounded-lg bg-primary/20">
+              <Activity className="h-3.5 w-3.5 text-primary" />
             </div>
             <div>
-              <p className="text-xs text-muted-foreground">Zonas Activas</p>
-              <p className="text-xl font-bold text-foreground">{activeZones}/{zones.length}</p>
+              <p className="text-xs text-muted-foreground">Activas</p>
+              <p className="text-base font-bold text-foreground">{activeZones}/{zones.length}</p>
             </div>
           </div>
         </Card>
-        <Card className="p-3 border-border bg-card/50">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-secondary/10">
-              <Droplets className="h-5 w-5 text-secondary" />
+        <Card className="p-2.5 border-0 bg-card/80 shadow-sm">
+          <div className="flex items-center gap-2">
+            <div className="p-1.5 rounded-lg bg-secondary/20">
+              <Droplets className="h-3.5 w-3.5 text-secondary" />
             </div>
             <div>
-              <p className="text-xs text-muted-foreground">Consumo Hoy</p>
-              <p className="text-xl font-bold text-foreground">{(totalWaterUsage / 1000).toFixed(1)}k L</p>
+              <p className="text-xs text-muted-foreground">Consumo</p>
+              <p className="text-base font-bold text-foreground">{(totalWaterUsage / 1000).toFixed(1)}k L</p>
             </div>
           </div>
         </Card>
-        <Card className="p-3 border-border bg-card/50">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-accent/10">
-              <Gauge className="h-5 w-5 text-accent" />
+        <Card className="p-2.5 border-0 bg-card/80 shadow-sm">
+          <div className="flex items-center gap-2">
+            <div className="p-1.5 rounded-lg bg-accent/20">
+              <Gauge className="h-3.5 w-3.5 text-accent" />
             </div>
             <div>
               <p className="text-xs text-muted-foreground">Eficiencia</p>
-              <p className="text-xl font-bold text-foreground">{avgEfficiency}%</p>
+              <p className="text-base font-bold text-foreground">{avgEfficiency}%</p>
             </div>
           </div>
         </Card>
-        <Card className="p-3 border-border bg-card/50">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-destructive/10">
-              <AlertTriangle className="h-5 w-5 text-destructive" />
+        <Card className="p-2.5 border-0 bg-card/80 shadow-sm">
+          <div className="flex items-center gap-2">
+            <div className="p-1.5 rounded-lg bg-destructive/20">
+              <AlertTriangle className="h-3.5 w-3.5 text-destructive" />
             </div>
             <div>
               <p className="text-xs text-muted-foreground">Alertas</p>
-              <p className="text-xl font-bold text-foreground">{warningZones}</p>
+              <p className="text-base font-bold text-foreground">{warningZones}</p>
             </div>
           </div>
         </Card>
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex gap-3 min-h-0 overflow-hidden">
+      <div className="flex-1 flex gap-2 min-h-0 overflow-hidden">
         {/* Zones Grid */}
         <div className="flex-1 overflow-y-auto pr-1">
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-3 gap-2">
             {zones.map((zone) => (
               <Card
                 key={zone.id}
-                className={`p-4 border transition-all cursor-pointer ${
+                className={`p-2.5 border-0 bg-card/50 shadow-sm transition-all cursor-pointer hover:bg-card/80 ${
                   selectedZone?.id === zone.id
-                    ? 'border-primary bg-primary/5'
-                    : 'border-border hover:border-primary/50'
-                } ${zone.isRunning ? 'ring-2 ring-primary/20' : ''}`}
+                    ? 'ring-1 ring-primary bg-primary/5'
+                    : ''
+                } ${zone.isRunning ? 'ring-1 ring-primary/30' : ''}`}
                 onClick={() => setSelectedZone(zone)}
               >
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex items-center gap-3">
-                    <div className={`p-2 rounded-lg ${
+                {/* Header */}
+                <div className="flex items-start justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <div className={`p-1.5 rounded-lg ${
                       zone.isRunning ? 'bg-primary/20' : 'bg-muted'
                     }`}>
-                      <Droplets className={`h-5 w-5 ${
+                      <Droplets className={`h-3.5 w-3.5 ${
                         zone.isRunning ? 'text-primary animate-pulse' : 'text-muted-foreground'
                       }`} />
                     </div>
                     <div>
-                      <h3 className="text-sm font-semibold text-foreground">{zone.name}</h3>
-                      <p className="text-xs text-muted-foreground">{zone.crop} - {zone.area}</p>
+                      <h3 className="text-xs font-semibold text-foreground">{zone.name}</h3>
+                      <p className="text-[10px] text-muted-foreground">{zone.crop} - {zone.area}</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${getStatusColor(zone.status)}`}>
+                  <div className="flex items-center gap-1">
+                    <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${getStatusColor(zone.status)}`}>
                       {getStatusLabel(zone.status)}
                     </span>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-7 w-7">
-                          <MoreVertical className="h-4 w-4" />
+                        <Button variant="ghost" size="icon" className="h-5 w-5">
+                          <MoreVertical className="h-3 w-3" />
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuItem>
-                          <Edit2 className="h-4 w-4 mr-2" />
-                          Editar zona
+                        <DropdownMenuItem className="text-xs">
+                          <Edit2 className="h-3 w-3 mr-2" />
+                          Editar
                         </DropdownMenuItem>
-                        <DropdownMenuItem>
-                          <History className="h-4 w-4 mr-2" />
-                          Ver historial
+                        <DropdownMenuItem className="text-xs">
+                          <History className="h-3 w-3 mr-2" />
+                          Historial
                         </DropdownMenuItem>
-                        <DropdownMenuItem>
-                          <Settings className="h-4 w-4 mr-2" />
-                          Configuracion
+                        <DropdownMenuItem className="text-xs">
+                          <Settings className="h-3 w-3 mr-2" />
+                          Config
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem className="text-destructive">
-                          <Trash2 className="h-4 w-4 mr-2" />
+                        <DropdownMenuItem className="text-xs text-destructive">
+                          <Trash2 className="h-3 w-3 mr-2" />
                           Eliminar
                         </DropdownMenuItem>
                       </DropdownMenuContent>
@@ -456,14 +456,14 @@ export default function IrrigationPage() {
                 </div>
 
                 {/* Moisture Bar */}
-                <div className="mb-3">
-                  <div className="flex items-center justify-between mb-1.5">
-                    <span className="text-xs text-muted-foreground">Humedad del Suelo</span>
-                    <span className="text-xs font-medium text-foreground">
+                <div className="mb-2">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-[10px] text-muted-foreground">Humedad</span>
+                    <span className="text-[10px] font-medium text-foreground">
                       {zone.soilMoisture}% / {zone.targetMoisture}%
                     </span>
                   </div>
-                  <div className="relative h-2 rounded-full bg-border overflow-hidden">
+                  <div className="relative h-1.5 rounded-full bg-border overflow-hidden">
                     <div
                       className={`h-full rounded-full transition-all ${getMoistureColor(zone.soilMoisture, zone.targetMoisture)}`}
                       style={{ width: `${zone.soilMoisture}%` }}
@@ -477,45 +477,45 @@ export default function IrrigationPage() {
 
                 {/* Progress if running */}
                 {zone.isRunning && (
-                  <div className="mb-3 p-2 rounded-lg bg-primary/5 border border-primary/20">
-                    <div className="flex items-center justify-between mb-1.5">
-                      <div className="flex items-center gap-1.5 text-xs text-primary">
-                        <Timer className="h-3 w-3" />
-                        Regando...
+                  <div className="mb-2 p-1.5 rounded-lg bg-primary/5 border border-primary/20">
+                    <div className="flex items-center justify-between mb-1">
+                      <div className="flex items-center gap-1 text-[10px] text-primary">
+                        <Timer className="h-2.5 w-2.5" />
+                        Regando
                       </div>
-                      <span className="text-xs font-medium text-primary">
-                        {zone.remainingTime} min restantes
+                      <span className="text-[10px] font-medium text-primary">
+                        {zone.remainingTime}m
                       </span>
                     </div>
                     <Progress 
                       value={((zone.duration - zone.remainingTime) / zone.duration) * 100} 
-                      className="h-1.5"
+                      className="h-1"
                     />
                   </div>
                 )}
 
                 {/* Info Row */}
-                <div className="grid grid-cols-3 gap-2 mb-3">
-                  <div className="text-center p-2 rounded-lg bg-muted/50">
-                    <p className="text-xs text-muted-foreground">Ultimo</p>
-                    <p className="text-xs font-medium text-foreground">{zone.lastIrrigation}</p>
+                <div className="grid grid-cols-3 gap-1 mb-2">
+                  <div className="text-center p-1 rounded bg-muted/50">
+                    <p className="text-[9px] text-muted-foreground">Ultimo</p>
+                    <p className="text-[10px] font-medium text-foreground">{zone.lastIrrigation}</p>
                   </div>
-                  <div className="text-center p-2 rounded-lg bg-muted/50">
-                    <p className="text-xs text-muted-foreground">Proximo</p>
-                    <p className="text-xs font-medium text-foreground">{zone.nextIrrigation}</p>
+                  <div className="text-center p-1 rounded bg-muted/50">
+                    <p className="text-[9px] text-muted-foreground">Prox</p>
+                    <p className="text-[10px] font-medium text-foreground">{zone.nextIrrigation}</p>
                   </div>
-                  <div className="text-center p-2 rounded-lg bg-muted/50">
-                    <p className="text-xs text-muted-foreground">Duracion</p>
-                    <p className="text-xs font-medium text-foreground">{zone.duration} min</p>
+                  <div className="text-center p-1 rounded bg-muted/50">
+                    <p className="text-[9px] text-muted-foreground">Dur</p>
+                    <p className="text-[10px] font-medium text-foreground">{zone.duration}m</p>
                   </div>
                 </div>
 
                 {/* Actions */}
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1">
                   <Button
                     variant={zone.isRunning ? 'destructive' : 'default'}
                     size="sm"
-                    className="flex-1 h-8"
+                    className="flex-1 h-6 text-[10px]"
                     onClick={(e) => {
                       e.stopPropagation()
                       toggleZoneRunning(zone.id)
@@ -523,18 +523,18 @@ export default function IrrigationPage() {
                   >
                     {zone.isRunning ? (
                       <>
-                        <Pause className="h-3.5 w-3.5 mr-1.5" />
+                        <Pause className="h-2.5 w-2.5 mr-1" />
                         Detener
                       </>
                     ) : (
                       <>
-                        <Play className="h-3.5 w-3.5 mr-1.5" />
+                        <Play className="h-2.5 w-2.5 mr-1" />
                         Iniciar
                       </>
                     )}
                   </Button>
-                  <Button variant="outline" size="icon" className="h-8 w-8">
-                    <RotateCcw className="h-3.5 w-3.5" />
+                  <Button variant="outline" size="icon" className="h-6 w-6">
+                    <RotateCcw className="h-2.5 w-2.5" />
                   </Button>
                 </div>
               </Card>
@@ -544,127 +544,125 @@ export default function IrrigationPage() {
 
         {/* Details Panel */}
         {selectedZone && (
-          <Card className="w-80 flex-shrink-0 border-border flex flex-col overflow-hidden">
-            <div className="p-3 border-b border-border flex items-center justify-between">
+          <Card className="w-64 flex-shrink-0 border-0 bg-card/50 shadow-sm flex flex-col overflow-hidden">
+            <div className="p-2.5 border-b border-border flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <div className={`p-2 rounded-lg ${
+                <div className={`p-1.5 rounded-lg ${
                   selectedZone.isRunning ? 'bg-primary/10' : 'bg-muted'
                 }`}>
-                  <Target className="h-4 w-4 text-primary" />
+                  <Target className="h-3.5 w-3.5 text-primary" />
                 </div>
                 <div>
-                  <h2 className="text-sm font-semibold text-foreground">{selectedZone.name}</h2>
-                  <p className="text-xs text-muted-foreground">{selectedZone.crop}</p>
+                  <h2 className="text-xs font-semibold text-foreground">{selectedZone.name}</h2>
+                  <p className="text-[10px] text-muted-foreground">{selectedZone.crop}</p>
                 </div>
               </div>
               <Button
                 variant={selectedZone.isRunning ? 'destructive' : 'default'}
-                size="sm"
+                size="icon"
+                className="h-6 w-6"
                 onClick={() => toggleZoneRunning(selectedZone.id)}
               >
-                <Power className="h-4 w-4" />
+                <Power className="h-3 w-3" />
               </Button>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-3 space-y-3">
+            <div className="flex-1 overflow-y-auto p-2.5 space-y-2">
               {/* Current Status */}
-              <div className="p-3 rounded-lg bg-muted/30 border border-border">
-                <h4 className="text-xs font-semibold text-foreground mb-2">Estado Actual</h4>
-                <div className="grid grid-cols-2 gap-3">
+              <div className="p-2 rounded-lg bg-muted/30 border border-border">
+                <h4 className="text-[10px] font-semibold text-foreground mb-1.5">Estado Actual</h4>
+                <div className="grid grid-cols-2 gap-2">
                   <div>
-                    <p className="text-xs text-muted-foreground">Humedad Suelo</p>
-                    <p className="text-lg font-bold text-foreground">{selectedZone.soilMoisture}%</p>
+                    <p className="text-[9px] text-muted-foreground">Humedad</p>
+                    <p className="text-sm font-bold text-foreground">{selectedZone.soilMoisture}%</p>
                   </div>
                   <div>
-                    <p className="text-xs text-muted-foreground">Objetivo</p>
-                    <p className="text-lg font-bold text-primary">{selectedZone.targetMoisture}%</p>
+                    <p className="text-[9px] text-muted-foreground">Objetivo</p>
+                    <p className="text-sm font-bold text-primary">{selectedZone.targetMoisture}%</p>
                   </div>
                   <div>
-                    <p className="text-xs text-muted-foreground">Valvula</p>
-                    <p className={`text-sm font-medium ${
+                    <p className="text-[9px] text-muted-foreground">Valvula</p>
+                    <p className={`text-[10px] font-medium ${
                       selectedZone.valveStatus === 'open' ? 'text-primary' : 'text-muted-foreground'
                     }`}>
                       {selectedZone.valveStatus === 'open' ? 'Abierta' : 'Cerrada'}
                     </p>
                   </div>
                   <div>
-                    <p className="text-xs text-muted-foreground">Eficiencia</p>
-                    <p className="text-sm font-medium text-foreground">{selectedZone.efficiency}%</p>
+                    <p className="text-[9px] text-muted-foreground">Eficiencia</p>
+                    <p className="text-[10px] font-medium text-foreground">{selectedZone.efficiency}%</p>
                   </div>
                 </div>
               </div>
 
               {/* Schedule */}
-              <div className="p-3 rounded-lg bg-muted/30 border border-border">
-                <div className="flex items-center justify-between mb-2">
-                  <h4 className="text-xs font-semibold text-foreground">Programacion</h4>
-                  <Button variant="ghost" size="sm" className="h-6 text-xs">
-                    <Edit2 className="h-3 w-3 mr-1" />
+              <div className="p-2 rounded-lg bg-muted/30 border border-border">
+                <div className="flex items-center justify-between mb-1.5">
+                  <h4 className="text-[10px] font-semibold text-foreground">Programacion</h4>
+                  <Button variant="ghost" size="sm" className="h-5 text-[9px] px-1">
+                    <Edit2 className="h-2.5 w-2.5 mr-0.5" />
                     Editar
                   </Button>
                 </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <Clock className="h-4 w-4 text-muted-foreground" />
+                <div className="flex items-center gap-1.5 text-[10px]">
+                  <Clock className="h-3 w-3 text-muted-foreground" />
                   <span className="text-foreground">{selectedZone.schedule}</span>
                 </div>
-                <div className="flex items-center gap-2 text-sm mt-1">
-                  <Timer className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-foreground">{selectedZone.duration} minutos por sesion</span>
+                <div className="flex items-center gap-1.5 text-[10px] mt-1">
+                  <Timer className="h-3 w-3 text-muted-foreground" />
+                  <span className="text-foreground">{selectedZone.duration} min/sesion</span>
                 </div>
               </div>
 
               {/* Water Usage */}
-              <div className="p-3 rounded-lg bg-muted/30 border border-border">
-                <h4 className="text-xs font-semibold text-foreground mb-2">Consumo de Agua</h4>
+              <div className="p-2 rounded-lg bg-muted/30 border border-border">
+                <h4 className="text-[10px] font-semibold text-foreground mb-1.5">Consumo</h4>
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-2xl font-bold text-secondary">{selectedZone.waterUsage} L</p>
-                    <p className="text-xs text-muted-foreground">Hoy</p>
+                    <p className="text-base font-bold text-secondary">{selectedZone.waterUsage} L</p>
+                    <p className="text-[9px] text-muted-foreground">Hoy</p>
                   </div>
-                  <div className="flex items-center gap-1 text-xs text-primary">
-                    <TrendingDown className="h-4 w-4" />
-                    -8% vs ayer
+                  <div className="flex items-center gap-0.5 text-[10px] text-primary">
+                    <TrendingDown className="h-3 w-3" />
+                    -8%
                   </div>
                 </div>
               </div>
 
               {/* Weather Conditions */}
-              <div className="p-3 rounded-lg bg-muted/30 border border-border">
-                <h4 className="text-xs font-semibold text-foreground mb-2">Condiciones</h4>
-                <div className="grid grid-cols-3 gap-2">
-                  <div className="flex flex-col items-center p-2 rounded-lg bg-background">
-                    <Thermometer className="h-4 w-4 text-destructive mb-1" />
-                    <span className="text-xs font-medium text-foreground">24°C</span>
-                    <span className="text-[10px] text-muted-foreground">Temp</span>
+              <div className="p-2 rounded-lg bg-muted/30 border border-border">
+                <h4 className="text-[10px] font-semibold text-foreground mb-1.5">Condiciones</h4>
+                <div className="grid grid-cols-3 gap-1">
+                  <div className="flex flex-col items-center p-1.5 rounded bg-background">
+                    <Thermometer className="h-3 w-3 text-destructive mb-0.5" />
+                    <span className="text-[10px] font-medium text-foreground">24°C</span>
                   </div>
-                  <div className="flex flex-col items-center p-2 rounded-lg bg-background">
-                    <Sun className="h-4 w-4 text-yellow-500 mb-1" />
-                    <span className="text-xs font-medium text-foreground">850</span>
-                    <span className="text-[10px] text-muted-foreground">W/m2</span>
+                  <div className="flex flex-col items-center p-1.5 rounded bg-background">
+                    <Sun className="h-3 w-3 text-accent mb-0.5" />
+                    <span className="text-[10px] font-medium text-foreground">850</span>
                   </div>
-                  <div className="flex flex-col items-center p-2 rounded-lg bg-background">
-                    <Cloud className="h-4 w-4 text-muted-foreground mb-1" />
-                    <span className="text-xs font-medium text-foreground">0%</span>
-                    <span className="text-[10px] text-muted-foreground">Lluvia</span>
+                  <div className="flex flex-col items-center p-1.5 rounded bg-background">
+                    <Cloud className="h-3 w-3 text-muted-foreground mb-0.5" />
+                    <span className="text-[10px] font-medium text-foreground">0%</span>
                   </div>
                 </div>
               </div>
 
               {/* Quick Actions */}
-              <div className="space-y-2">
-                <Button variant="outline" className="w-full justify-between h-9 text-xs">
-                  <span className="flex items-center gap-2">
-                    <History className="h-4 w-4" />
-                    Ver historial completo
+              <div className="space-y-1">
+                <Button variant="outline" className="w-full justify-between h-7 text-[10px]">
+                  <span className="flex items-center gap-1.5">
+                    <History className="h-3 w-3" />
+                    Ver historial
                   </span>
-                  <ChevronRight className="h-4 w-4" />
+                  <ChevronRight className="h-3 w-3" />
                 </Button>
-                <Button variant="outline" className="w-full justify-between h-9 text-xs">
-                  <span className="flex items-center gap-2">
-                    <Settings className="h-4 w-4" />
-                    Configuracion avanzada
+                <Button variant="outline" className="w-full justify-between h-7 text-[10px]">
+                  <span className="flex items-center gap-1.5">
+                    <Settings className="h-3 w-3" />
+                    Configuracion
                   </span>
-                  <ChevronRight className="h-4 w-4" />
+                  <ChevronRight className="h-3 w-3" />
                 </Button>
               </div>
             </div>
