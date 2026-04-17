@@ -308,24 +308,19 @@ export default function ReportsPage() {
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Header */}
-        <div className="flex-shrink-0 border-b border-border bg-card/50 backdrop-blur-sm px-6 py-4">
+        <div className="flex-shrink-0 border-b border-border px-6 py-3">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-primary/20 to-emerald-500/20 flex items-center justify-center">
-                <BarChart3 className="h-6 w-6 text-primary" />
-              </div>
-              <div>
-                <h1 className="text-xl font-bold text-foreground">Centro de Reportes</h1>
-                <p className="text-sm text-muted-foreground">Genera y descarga analisis detallados de tu operacion agricola</p>
-              </div>
+            <div>
+              <h1 className="text-sm font-semibold text-foreground">Centro de Reportes</h1>
+              <p className="text-xs text-muted-foreground">Genera y descarga analisis detallados</p>
             </div>
             <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm" className="gap-2">
-                <Settings className="h-4 w-4" />
+              <Button variant="outline" size="sm" className="gap-1.5 h-7 text-xs">
+                <Settings className="h-3.5 w-3.5" />
                 Configurar
               </Button>
-              <Button variant="default" size="sm" className="gap-2 bg-primary hover:bg-primary/90">
-                <Plus className="h-4 w-4" />
+              <Button variant="default" size="sm" className="gap-1.5 h-7 text-xs">
+                <Plus className="h-3.5 w-3.5" />
                 Programar reporte
               </Button>
             </div>

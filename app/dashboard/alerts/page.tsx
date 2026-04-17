@@ -238,52 +238,47 @@ export default function AlertsPage() {
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Header */}
-        <div className="flex-shrink-0 border-b border-border bg-card/50 backdrop-blur-sm px-6 py-4">
+        <div className="flex-shrink-0 border-b border-border px-6 py-3">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-red-500/20 to-amber-500/20 flex items-center justify-center">
-                <Bell className="h-6 w-6 text-red-500" />
+            <div>
+              <div className="flex items-center gap-2">
+                <h1 className="text-sm font-semibold text-foreground">Centro de Alertas</h1>
+                {unreadCount > 0 && (
+                  <span className="px-1.5 py-0.5 rounded-full bg-destructive text-destructive-foreground text-xs font-medium">
+                    {unreadCount} nuevas
+                  </span>
+                )}
               </div>
-              <div>
-                <div className="flex items-center gap-3">
-                  <h1 className="text-xl font-bold text-foreground">Centro de Alertas</h1>
-                  {unreadCount > 0 && (
-                    <span className="px-2 py-0.5 rounded-full bg-red-500 text-white text-xs font-semibold animate-pulse">
-                      {unreadCount} nuevas
-                    </span>
-                  )}
-                </div>
-                <p className="text-sm text-muted-foreground">Monitoreo en tiempo real de eventos criticos del sistema</p>
-              </div>
+              <p className="text-xs text-muted-foreground">Monitoreo en tiempo real de eventos criticos</p>
             </div>
             <div className="flex items-center gap-2">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => setSoundEnabled(!soundEnabled)}
-                className="gap-2"
+                className="gap-1.5 h-7 text-xs"
               >
-                {soundEnabled ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
-                {soundEnabled ? 'Sonido activo' : 'Silenciado'}
+                {soundEnabled ? <Volume2 className="h-3.5 w-3.5" /> : <VolumeX className="h-3.5 w-3.5" />}
+                {soundEnabled ? 'Sonido' : 'Mudo'}
               </Button>
               <Button
                 variant="outline"
                 size="sm"
                 onClick={handleRefresh}
                 disabled={isRefreshing}
-                className="gap-2"
+                className="gap-1.5 h-7 text-xs"
               >
-                <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+                <RefreshCw className={`h-3.5 w-3.5 ${isRefreshing ? 'animate-spin' : ''}`} />
                 Actualizar
               </Button>
               <Button
                 variant="default"
                 size="sm"
                 onClick={handleMarkAllRead}
-                className="gap-2 bg-primary hover:bg-primary/90"
+                className="gap-1.5 h-7 text-xs"
               >
-                <CheckCircle className="h-4 w-4" />
-                Marcar todas leidas
+                <CheckCircle className="h-3.5 w-3.5" />
+                Marcar leidas
               </Button>
             </div>
           </div>

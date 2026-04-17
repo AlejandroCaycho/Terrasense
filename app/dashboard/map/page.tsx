@@ -397,16 +397,9 @@ export default function StationsMapPage() {
     <div className="h-full flex flex-col bg-background overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between p-3 border-b border-border flex-shrink-0">
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2">
-            <div className="p-2 rounded-lg bg-primary/10">
-              <Radio className="h-5 w-5 text-primary" />
-            </div>
-            <div>
-              <h1 className="text-lg font-semibold text-foreground">Estaciones</h1>
-              <p className="text-xs text-muted-foreground">Gestion y monitoreo de sensores</p>
-            </div>
-          </div>
+        <div>
+          <h1 className="text-sm font-semibold text-foreground">Estaciones</h1>
+          <p className="text-xs text-muted-foreground">Gestion y monitoreo de sensores</p>
         </div>
         <div className="flex items-center gap-2">
           {/* View Toggle */}

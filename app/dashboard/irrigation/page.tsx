@@ -239,14 +239,9 @@ export default function IrrigationPage() {
     <div className="h-full flex flex-col bg-background overflow-hidden p-3 gap-2">
       {/* Header */}
       <div className="flex items-center justify-between flex-shrink-0">
-        <div className="flex items-center gap-2">
-          <div className="p-1.5 rounded-lg bg-secondary/10">
-            <Droplets className="h-4 w-4 text-secondary" />
-          </div>
-          <div>
-            <h1 className="text-sm font-semibold text-foreground">Sistema de Riego</h1>
-            <p className="text-xs text-muted-foreground">Control y monitoreo de zonas</p>
-          </div>
+        <div>
+          <h1 className="text-sm font-semibold text-foreground">Sistema de Riego</h1>
+          <p className="text-xs text-muted-foreground">Control y monitoreo de zonas</p>
         </div>
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-card border border-border">
