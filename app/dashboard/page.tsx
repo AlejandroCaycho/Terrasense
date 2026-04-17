@@ -52,7 +52,7 @@ export default function DashboardPage() {
   return (
     <div className="h-full bg-background overflow-auto">
       {/* Compact Header */}
-      <div className="sticky top-0 z-10 border-b border-border bg-card/95 backdrop-blur-sm px-4 py-2">
+      <div className="sticky top-0 z-10 bg-card/95 backdrop-blur-sm px-4 py-2">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-sm font-semibold text-foreground">Panel de Control</h1>
