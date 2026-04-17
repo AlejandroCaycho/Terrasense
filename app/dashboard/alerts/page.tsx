@@ -211,34 +211,49 @@ export default function AlertsPage() {
   const getAlertColors = (type: string) => {
     switch (type) {
       case 'critical': return { 
-        bg: 'bg-red-500/10', 
-        border: 'border-red-500/30',
-        icon: 'text-red-500 bg-red-500/20',
-        badge: 'bg-red-500 text-white'
+        bg: 'bg-gradient-to-r from-red-500/20 via-red-500/10 to-transparent', 
+        border: 'border-red-500/50',
+        borderLeft: 'border-l-4 border-l-red-500',
+        icon: 'text-red-500 bg-red-500/20 shadow-lg shadow-red-500/20',
+        badge: 'bg-red-500 text-white shadow-md shadow-red-500/30',
+        glow: 'shadow-lg shadow-red-500/10 hover:shadow-red-500/20',
+        text: 'text-red-400'
       }
       case 'warning': return { 
-        bg: 'bg-amber-500/10', 
-        border: 'border-amber-500/30',
-        icon: 'text-amber-500 bg-amber-500/20',
-        badge: 'bg-amber-500 text-white'
+        bg: 'bg-gradient-to-r from-amber-500/20 via-amber-500/10 to-transparent', 
+        border: 'border-amber-500/50',
+        borderLeft: 'border-l-4 border-l-amber-500',
+        icon: 'text-amber-500 bg-amber-500/20 shadow-lg shadow-amber-500/20',
+        badge: 'bg-amber-500 text-white shadow-md shadow-amber-500/30',
+        glow: 'shadow-lg shadow-amber-500/10 hover:shadow-amber-500/20',
+        text: 'text-amber-400'
       }
       case 'info': return { 
-        bg: 'bg-blue-500/10', 
+        bg: 'bg-gradient-to-r from-blue-500/15 via-blue-500/5 to-transparent', 
         border: 'border-blue-500/30',
+        borderLeft: 'border-l-4 border-l-blue-500',
         icon: 'text-blue-500 bg-blue-500/20',
-        badge: 'bg-blue-500 text-white'
+        badge: 'bg-blue-500 text-white',
+        glow: 'hover:shadow-md hover:shadow-blue-500/10',
+        text: 'text-blue-400'
       }
       case 'success': return { 
-        bg: 'bg-primary/10', 
-        border: 'border-primary/30',
-        icon: 'text-primary bg-primary/20',
-        badge: 'bg-primary text-primary-foreground'
+        bg: 'bg-gradient-to-r from-emerald-500/15 via-emerald-500/5 to-transparent', 
+        border: 'border-emerald-500/30',
+        borderLeft: 'border-l-4 border-l-emerald-500',
+        icon: 'text-emerald-500 bg-emerald-500/20',
+        badge: 'bg-emerald-500 text-white',
+        glow: 'hover:shadow-md hover:shadow-emerald-500/10',
+        text: 'text-emerald-400'
       }
       default: return { 
         bg: 'bg-muted', 
         border: 'border-border',
+        borderLeft: '',
         icon: 'text-muted-foreground bg-muted',
-        badge: 'bg-muted text-muted-foreground'
+        badge: 'bg-muted text-muted-foreground',
+        glow: '',
+        text: 'text-muted-foreground'
       }
     }
   }
@@ -423,9 +438,9 @@ export default function AlertsPage() {
                 return (
                   <Card 
                     key={alert.id} 
-                    className={`border ${colors.border} ${colors.bg} p-4 cursor-pointer transition-all hover:shadow-lg ${
-                      selectedAlert?.id === alert.id ? 'ring-2 ring-primary' : ''
-                    } ${!alert.read ? 'border-l-4' : ''}`}
+                    className={`border ${colors.border} ${colors.bg} ${colors.borderLeft} ${colors.glow} p-4 cursor-pointer transition-all duration-300 ${
+                      selectedAlert?.id === alert.id ? 'ring-2 ring-primary ring-offset-2 ring-offset-background scale-[1.01]' : ''
+                    } ${!alert.read ? 'animate-pulse-subtle' : ''}`}
                     onClick={() => {
                       setSelectedAlert(alert)
                       handleMarkAsRead(alert.id)
@@ -439,9 +454,15 @@ export default function AlertsPage() {
                         <div className="flex items-start justify-between gap-2">
                           <div>
                             <div className="flex items-center gap-2">
-                              <p className="text-sm font-semibold text-foreground">{alert.title}</p>
+                              <p className={`text-sm font-semibold ${alert.type === 'critical' ? 'text-red-400' : alert.type === 'warning' ? 'text-amber-400' : 'text-foreground'}`}>
+                                {alert.title}
+                              </p>
                               {!alert.read && (
-                                <span className="h-2 w-2 rounded-full bg-primary animate-pulse" />
+                                <span className={`h-2.5 w-2.5 rounded-full animate-pulse ${
+                                  alert.type === 'critical' ? 'bg-red-500 shadow-lg shadow-red-500/50' : 
+                                  alert.type === 'warning' ? 'bg-amber-500 shadow-lg shadow-amber-500/50' : 
+                                  'bg-primary shadow-lg shadow-primary/50'
+                                }`} />
                               )}
                             </div>
                             <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{alert.message}</p>
