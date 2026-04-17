@@ -1,137 +1,596 @@
 'use client'
 
 import React, { useState } from 'react'
-import { AlertTriangle, AlertCircle, Bell, Trash2, Filter } from 'lucide-react'
+import { 
+  AlertTriangle, 
+  AlertCircle, 
+  Bell, 
+  Trash2, 
+  CheckCircle, 
+  Clock, 
+  XCircle,
+  Filter,
+  Search,
+  MoreVertical,
+  Volume2,
+  VolumeX,
+  Settings,
+  RefreshCw,
+  ChevronRight,
+  Zap,
+  Thermometer,
+  Droplets,
+  Bug,
+  Wifi,
+  WifiOff,
+  TrendingUp,
+  Shield
+} from 'lucide-react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 
-const alerts = [
-  { id: '1', type: 'critical', title: 'Temperatura extrema', message: 'Zona A: 42°C - Riesgo de quemadura', time: 'hace 5 min', zone: 'A' },
-  { id: '2', type: 'warning', title: 'Humedad baja', message: 'Zona C: 22% - Activar riego de emergencia', time: 'hace 15 min', zone: 'C' },
-  { id: '3', type: 'info', title: 'Mantenimiento pendiente', message: 'Estación #3 requiere calibración', time: 'hace 1 hora', zone: 'B' },
-  { id: '4', type: 'critical', title: 'Sistema de riego falla', message: 'Zona D: Sin agua hace 30 minutos', time: 'hace 2 horas', zone: 'D' },
-  { id: '5', type: 'warning', title: 'Plagas detectadas', message: 'Cultivo Tomate: Presencia de ácaros', time: 'hace 3 horas', zone: 'A' },
-  { id: '6', type: 'info', title: 'Actualización completada', message: 'Dashboard actualizado correctamente', time: 'hace 5 horas', zone: '-' },
-  { id: '7', type: 'warning', title: 'Sensor desconectado', message: 'Estación #5: Sin señal 45 min', time: 'hace 6 horas', zone: 'E' },
+interface Alert {
+  id: string
+  type: 'critical' | 'warning' | 'info' | 'success'
+  title: string
+  message: string
+  time: string
+  timestamp: Date
+  zone: string
+  station: string
+  category: 'temperature' | 'humidity' | 'irrigation' | 'pest' | 'system' | 'connection'
+  read: boolean
+  actions?: { label: string; action: string }[]
+}
+
+const initialAlerts: Alert[] = [
+  { 
+    id: '1', 
+    type: 'critical', 
+    title: 'Temperatura extrema detectada', 
+    message: 'Zona A ha alcanzado 42°C. Riesgo de dano severo en cultivos de tomate. Se recomienda activar sistema de enfriamiento inmediatamente.', 
+    time: 'hace 5 min',
+    timestamp: new Date(Date.now() - 5 * 60 * 1000),
+    zone: 'A',
+    station: 'Estacion Norte',
+    category: 'temperature',
+    read: false,
+    actions: [{ label: 'Activar enfriamiento', action: 'cooling' }, { label: 'Ver detalles', action: 'details' }]
+  },
+  { 
+    id: '2', 
+    type: 'critical', 
+    title: 'Falla en sistema de riego', 
+    message: 'Zona D sin suministro de agua hace 45 minutos. Bomba principal reporta error de presion. Requiere atencion inmediata.', 
+    time: 'hace 12 min',
+    timestamp: new Date(Date.now() - 12 * 60 * 1000),
+    zone: 'D',
+    station: 'Estacion Sur',
+    category: 'irrigation',
+    read: false,
+    actions: [{ label: 'Reiniciar bomba', action: 'restart' }, { label: 'Llamar tecnico', action: 'support' }]
+  },
+  { 
+    id: '3', 
+    type: 'warning', 
+    title: 'Humedad del suelo baja', 
+    message: 'Zona C registra 22% de humedad. Nivel optimo: 45-65%. Programar riego de emergencia recomendado.', 
+    time: 'hace 25 min',
+    timestamp: new Date(Date.now() - 25 * 60 * 1000),
+    zone: 'C',
+    station: 'Estacion Este',
+    category: 'humidity',
+    read: false,
+    actions: [{ label: 'Iniciar riego', action: 'irrigate' }]
+  },
+  { 
+    id: '4', 
+    type: 'warning', 
+    title: 'Plagas detectadas', 
+    message: 'Sensores detectan presencia de acaros rojos en cultivo de tomate. Afectacion estimada: 15% del area.', 
+    time: 'hace 1 hora',
+    timestamp: new Date(Date.now() - 60 * 60 * 1000),
+    zone: 'A',
+    station: 'Estacion Norte',
+    category: 'pest',
+    read: true,
+    actions: [{ label: 'Ver analisis', action: 'analysis' }, { label: 'Programar fumigacion', action: 'fumigate' }]
+  },
+  { 
+    id: '5', 
+    type: 'warning', 
+    title: 'Sensor desconectado', 
+    message: 'Estacion #5 sin senal durante 45 minutos. Ultima lectura: Temp 28°C, Humedad 55%.', 
+    time: 'hace 2 horas',
+    timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
+    zone: 'E',
+    station: 'Estacion #5',
+    category: 'connection',
+    read: true,
+    actions: [{ label: 'Diagnosticar', action: 'diagnose' }]
+  },
+  { 
+    id: '6', 
+    type: 'info', 
+    title: 'Mantenimiento programado', 
+    message: 'Estacion #3 requiere calibracion de sensores. Proxima ventana de mantenimiento: Sabado 8:00 AM.', 
+    time: 'hace 3 horas',
+    timestamp: new Date(Date.now() - 3 * 60 * 60 * 1000),
+    zone: 'B',
+    station: 'Estacion #3',
+    category: 'system',
+    read: true
+  },
+  { 
+    id: '7', 
+    type: 'success', 
+    title: 'Riego completado exitosamente', 
+    message: 'Zona B ha completado ciclo de riego programado. Consumo: 1,250 litros. Duracion: 45 min.', 
+    time: 'hace 4 horas',
+    timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000),
+    zone: 'B',
+    station: 'Estacion Sur',
+    category: 'irrigation',
+    read: true
+  },
+  { 
+    id: '8', 
+    type: 'info', 
+    title: 'Actualizacion del sistema', 
+    message: 'Sistema actualizado a version 2.4.1. Nuevas funciones: Deteccion avanzada de plagas, reportes automaticos.', 
+    time: 'hace 6 horas',
+    timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000),
+    zone: '-',
+    station: 'Sistema',
+    category: 'system',
+    read: true
+  },
 ]
 
-const alertStats = [
-  { label: 'Críticas', value: '2', color: 'text-destructive' },
-  { label: 'Advertencias', value: '3', color: 'text-accent' },
-  { label: 'Informativas', value: '2', color: 'text-secondary' },
-]
+const categoryIcons: Record<string, React.ElementType> = {
+  temperature: Thermometer,
+  humidity: Droplets,
+  irrigation: Droplets,
+  pest: Bug,
+  system: Settings,
+  connection: Wifi,
+}
 
 export default function AlertsPage() {
-  const [filterType, setFilterType] = useState<'all' | 'critical' | 'warning' | 'info'>('all')
-  const [dismissedAlerts, setDismissedAlerts] = useState<string[]>([])
+  const [alerts, setAlerts] = useState<Alert[]>(initialAlerts)
+  const [filterType, setFilterType] = useState<'all' | 'critical' | 'warning' | 'info' | 'success'>('all')
+  const [filterCategory, setFilterCategory] = useState<string>('all')
+  const [searchQuery, setSearchQuery] = useState('')
+  const [selectedAlert, setSelectedAlert] = useState<Alert | null>(null)
+  const [soundEnabled, setSoundEnabled] = useState(true)
+  const [isRefreshing, setIsRefreshing] = useState(false)
+
+  const handleDismiss = (id: string) => {
+    setAlerts(alerts.filter(a => a.id !== id))
+    if (selectedAlert?.id === id) setSelectedAlert(null)
+  }
+
+  const handleMarkAsRead = (id: string) => {
+    setAlerts(alerts.map(a => a.id === id ? { ...a, read: true } : a))
+  }
+
+  const handleMarkAllRead = () => {
+    setAlerts(alerts.map(a => ({ ...a, read: true })))
+  }
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true)
+    await new Promise(resolve => setTimeout(resolve, 1000))
+    setIsRefreshing(false)
+  }
 
   const filteredAlerts = alerts.filter(a => {
-    if (filterType === 'all') return true
-    return a.type === filterType
-  }).filter(a => !dismissedAlerts.includes(a.id))
+    const matchesType = filterType === 'all' || a.type === filterType
+    const matchesCategory = filterCategory === 'all' || a.category === filterCategory
+    const matchesSearch = a.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          a.message.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          a.station.toLowerCase().includes(searchQuery.toLowerCase())
+    return matchesType && matchesCategory && matchesSearch
+  })
+
+  const criticalCount = alerts.filter(a => a.type === 'critical').length
+  const warningCount = alerts.filter(a => a.type === 'warning').length
+  const infoCount = alerts.filter(a => a.type === 'info').length
+  const unreadCount = alerts.filter(a => !a.read).length
 
   const getAlertIcon = (type: string) => {
     switch (type) {
-      case 'critical':
-        return <AlertTriangle className="h-4 w-4 text-destructive" />
-      case 'warning':
-        return <AlertCircle className="h-4 w-4 text-accent" />
-      case 'info':
-        return <Bell className="h-4 w-4 text-secondary" />
-      default:
-        return <AlertCircle className="h-4 w-4 text-primary" />
+      case 'critical': return <XCircle className="h-5 w-5" />
+      case 'warning': return <AlertTriangle className="h-5 w-5" />
+      case 'info': return <AlertCircle className="h-5 w-5" />
+      case 'success': return <CheckCircle className="h-5 w-5" />
+      default: return <Bell className="h-5 w-5" />
     }
   }
 
-  const getAlertColor = (type: string) => {
+  const getAlertColors = (type: string) => {
     switch (type) {
-      case 'critical':
-        return 'bg-destructive/10 border-l-2 border-destructive'
-      case 'warning':
-        return 'bg-accent/10 border-l-2 border-accent'
-      case 'info':
-        return 'bg-secondary/10 border-l-2 border-secondary'
-      default:
-        return 'bg-primary/10 border-l-2 border-primary'
+      case 'critical': return { 
+        icon: 'text-red-500 bg-red-500/20',
+        badge: 'bg-red-500/20 text-red-500'
+      }
+      case 'warning': return { 
+        icon: 'text-amber-500 bg-amber-500/20',
+        badge: 'bg-amber-500/20 text-amber-500'
+      }
+      case 'info': return { 
+        icon: 'text-blue-500 bg-blue-500/20',
+        badge: 'bg-blue-500/20 text-blue-500'
+      }
+      case 'success': return { 
+        icon: 'text-emerald-500 bg-emerald-500/20',
+        badge: 'bg-emerald-500/20 text-emerald-500'
+      }
+      default: return { 
+        icon: 'text-muted-foreground bg-muted',
+        badge: 'bg-muted text-muted-foreground'
+      }
     }
   }
 
   return (
-    <div className="flex flex-col h-screen bg-background overflow-hidden">
-      {/* Header */}
-      <div className="border-b border-border bg-card/50 backdrop-blur-sm px-6 py-3">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-sm font-semibold text-foreground">Alertas</h1>
-            <p className="text-xs text-muted-foreground">Monitoreo en tiempo real de eventos</p>
+    <div className="h-full bg-background flex">
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col min-w-0">
+        {/* Header */}
+        <div className="flex-shrink-0 border-b border-border px-6 py-3">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-2">
+                <h1 className="text-sm font-semibold text-foreground">Centro de Alertas</h1>
+                {unreadCount > 0 && (
+                  <span className="px-1.5 py-0.5 rounded-full bg-destructive text-destructive-foreground text-xs font-medium">
+                    {unreadCount} nuevas
+                  </span>
+                )}
+              </div>
+              <p className="text-xs text-muted-foreground">Monitoreo en tiempo real de eventos criticos</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setSoundEnabled(!soundEnabled)}
+                className="gap-1.5 h-7 text-xs"
+              >
+                {soundEnabled ? <Volume2 className="h-3.5 w-3.5" /> : <VolumeX className="h-3.5 w-3.5" />}
+                {soundEnabled ? 'Sonido' : 'Mudo'}
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleRefresh}
+                disabled={isRefreshing}
+                className="gap-1.5 h-7 text-xs"
+              >
+                <RefreshCw className={`h-3.5 w-3.5 ${isRefreshing ? 'animate-spin' : ''}`} />
+                Actualizar
+              </Button>
+              <Button
+                variant="default"
+                size="sm"
+                onClick={handleMarkAllRead}
+                className="gap-1.5 h-7 text-xs"
+              >
+                <CheckCircle className="h-3.5 w-3.5" />
+                Marcar leidas
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Stats Cards */}
+        <div className="flex-shrink-0 grid grid-cols-4 gap-2 px-6 py-3 border-b border-border">
+          <Card className="border border-border bg-card/80 p-3 shadow-sm relative">
+            <div className="flex items-center gap-2">
+              <div className="rounded-lg bg-destructive/20 p-1.5 flex-shrink-0">
+                <XCircle className="h-4 w-4 text-destructive" />
+              </div>
+              <div>
+                <p className="text-xs text-foreground">Criticas</p>
+                <p className="text-lg font-bold text-foreground">{criticalCount}</p>
+              </div>
+            </div>
+            {criticalCount > 0 && (
+              <div className="absolute top-2 right-2 h-2 w-2 rounded-full bg-destructive animate-ping" />
+            )}
+          </Card>
+          
+          <Card className="border border-border bg-card/80 p-3 shadow-sm">
+            <div className="flex items-center gap-2">
+              <div className="rounded-lg bg-accent/20 p-1.5 flex-shrink-0">
+                <AlertTriangle className="h-4 w-4 text-accent" />
+              </div>
+              <div>
+                <p className="text-xs text-foreground">Advertencias</p>
+                <p className="text-lg font-bold text-foreground">{warningCount}</p>
+              </div>
+            </div>
+          </Card>
+          
+          <Card className="border border-border bg-card/80 p-3 shadow-sm">
+            <div className="flex items-center gap-2">
+              <div className="rounded-lg bg-secondary/20 p-1.5 flex-shrink-0">
+                <Bell className="h-4 w-4 text-secondary" />
+              </div>
+              <div>
+                <p className="text-xs text-foreground">Informativas</p>
+                <p className="text-lg font-bold text-foreground">{infoCount}</p>
+              </div>
+            </div>
+          </Card>
+
+          <Card className="border border-border bg-card/80 p-3 shadow-sm">
+            <div className="flex items-center gap-2">
+              <div className="rounded-lg bg-primary/20 p-1.5 flex-shrink-0">
+                <Shield className="h-4 w-4 text-primary" />
+              </div>
+              <div>
+                <p className="text-xs text-foreground">Sistema estable</p>
+                <p className="text-lg font-bold text-foreground">98%</p>
+              </div>
+            </div>
+          </Card>
+        </div>
+
+        {/* Filters */}
+        <div className="flex-shrink-0 px-6 py-4 border-b border-border flex items-center gap-4">
+          {/* Search */}
+          <div className="relative flex-1 max-w-md">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <input
+              type="text"
+              placeholder="Buscar alertas..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 rounded-lg bg-input border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+            />
+          </div>
+
+          {/* Type Filter */}
+          <div className="flex items-center gap-2 bg-muted/50 rounded-lg p-1">
+            {([
+              { type: 'all', label: 'Todas' },
+              { type: 'critical', label: 'Criticas' },
+              { type: 'warning', label: 'Advertencias' },
+              { type: 'info', label: 'Info' },
+            ] as const).map((tab) => (
+              <button
+                key={tab.type}
+                onClick={() => setFilterType(tab.type)}
+                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
+                  filterType === tab.type
+                    ? 'bg-background text-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Category Filter */}
+          <div className="flex items-center gap-2">
+            <Filter className="h-4 w-4 text-muted-foreground" />
+            <select
+              value={filterCategory}
+              onChange={(e) => setFilterCategory(e.target.value)}
+              className="bg-input border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+            >
+              <option value="all">Todas las categorias</option>
+              <option value="temperature">Temperatura</option>
+              <option value="humidity">Humedad</option>
+              <option value="irrigation">Riego</option>
+              <option value="pest">Plagas</option>
+              <option value="system">Sistema</option>
+              <option value="connection">Conexion</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Alerts List */}
+        <div className="flex-1 overflow-auto p-6">
+          <div className="space-y-3">
+            {filteredAlerts.length > 0 ? (
+              filteredAlerts.map((alert) => {
+                const colors = getAlertColors(alert.type)
+                const CategoryIcon = categoryIcons[alert.category] || Bell
+                
+                return (
+                  <Card 
+                    key={alert.id} 
+                    className={`border ${colors.border} ${colors.bg} ${colors.borderLeft} ${colors.glow} p-4 cursor-pointer transition-all duration-300 ${
+                      selectedAlert?.id === alert.id ? 'ring-2 ring-primary ring-offset-2 ring-offset-background scale-[1.01]' : ''
+                    } ${!alert.read ? 'animate-pulse-subtle' : ''}`}
+                    onClick={() => {
+                      setSelectedAlert(alert)
+                      handleMarkAsRead(alert.id)
+                    }}
+                  >
+                    <div className="flex items-start gap-4">
+                      <div className={`h-10 w-10 rounded-lg ${colors.icon} flex items-center justify-center flex-shrink-0`}>
+                        {getAlertIcon(alert.type)}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-start justify-between gap-2">
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <p className={`text-sm font-semibold ${alert.type === 'critical' ? 'text-red-400' : alert.type === 'warning' ? 'text-amber-400' : 'text-foreground'}`}>
+                                {alert.title}
+                              </p>
+                              {!alert.read && (
+                                <span className={`h-2.5 w-2.5 rounded-full animate-pulse ${
+                                  alert.type === 'critical' ? 'bg-red-500 shadow-lg shadow-red-500/50' : 
+                                  alert.type === 'warning' ? 'bg-amber-500 shadow-lg shadow-amber-500/50' : 
+                                  'bg-primary shadow-lg shadow-primary/50'
+                                }`} />
+                              )}
+                            </div>
+                            <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{alert.message}</p>
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              handleDismiss(alert.id)
+                            }}
+                            className="h-8 w-8 p-0 flex-shrink-0 hover:bg-background/50"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                        <div className="flex items-center gap-3 mt-3 flex-wrap">
+                          <span className="text-xs text-muted-foreground flex items-center gap-1">
+                            <Clock className="h-3 w-3" />
+                            {alert.time}
+                          </span>
+                          {alert.zone !== '-' && (
+                            <span className="text-xs bg-primary/20 text-primary px-2 py-0.5 rounded-full font-medium">
+                              Zona {alert.zone}
+                            </span>
+                          )}
+                          <span className="text-xs bg-muted text-muted-foreground px-2 py-0.5 rounded-full flex items-center gap-1">
+                            <CategoryIcon className="h-3 w-3" />
+                            {alert.station}
+                          </span>
+                          <span className={`text-xs px-2 py-0.5 rounded-full ${colors.badge}`}>
+                            {alert.type === 'critical' ? 'Critica' : 
+                             alert.type === 'warning' ? 'Advertencia' : 
+                             alert.type === 'success' ? 'Exito' : 'Info'}
+                          </span>
+                        </div>
+                        {alert.actions && alert.actions.length > 0 && (
+                          <div className="flex items-center gap-2 mt-3">
+                            {alert.actions.map((action, idx) => (
+                              <Button
+                                key={idx}
+                                variant={idx === 0 ? 'default' : 'outline'}
+                                size="sm"
+                                onClick={(e) => e.stopPropagation()}
+                                className={idx === 0 ? 'bg-primary hover:bg-primary/90' : ''}
+                              >
+                                {action.label}
+                              </Button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </Card>
+                )
+              })
+            ) : (
+              <div className="flex flex-col items-center justify-center h-64 gap-4">
+                <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center">
+                  <CheckCircle className="h-8 w-8 text-primary" />
+                </div>
+                <div className="text-center">
+                  <p className="text-lg font-semibold text-foreground">Todo en orden</p>
+                  <p className="text-sm text-muted-foreground">No hay alertas que coincidan con tu busqueda</p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
 
-      {/* Alert Stats */}
-      <div className="grid grid-cols-3 gap-4 px-6 py-3 border-b border-border">
-        {alertStats.map((stat) => (
-          <div key={stat.label} className="flex items-center gap-2">
-            <div className={`text-2xl font-bold ${stat.color}`}>{stat.value}</div>
-            <p className="text-xs text-muted-foreground">{stat.label}</p>
+      {/* Detail Panel */}
+      {selectedAlert && (
+        <div className="w-96 border-l border-border bg-card/50 flex flex-col">
+          <div className="p-4 border-b border-border flex items-center justify-between">
+            <h2 className="font-semibold text-foreground">Detalles de alerta</h2>
+            <Button variant="ghost" size="sm" onClick={() => setSelectedAlert(null)}>
+              <XCircle className="h-4 w-4" />
+            </Button>
           </div>
-        ))}
-      </div>
+          <div className="flex-1 overflow-auto p-4 space-y-6">
+            {/* Alert Header */}
+            <div className={`rounded-xl p-4 ${getAlertColors(selectedAlert.type).bg}`}>
+              <div className="flex items-center gap-3">
+                <div className={`h-12 w-12 rounded-lg ${getAlertColors(selectedAlert.type).icon} flex items-center justify-center`}>
+                  {getAlertIcon(selectedAlert.type)}
+                </div>
+                <div>
+                  <p className="font-semibold text-foreground">{selectedAlert.title}</p>
+                  <p className="text-xs text-muted-foreground">{selectedAlert.time}</p>
+                </div>
+              </div>
+            </div>
 
-      {/* Filter Buttons */}
-      <div className="flex items-center gap-2 px-6 py-3 border-b border-border overflow-x-auto">
-        <Filter className="h-3 w-3 text-muted-foreground flex-shrink-0" />
-        {(['all', 'critical', 'warning', 'info'] as const).map((type) => (
-          <button
-            key={type}
-            onClick={() => setFilterType(type)}
-            className={`text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap flex-shrink-0 ${
-              filterType === type
-                ? 'bg-primary text-primary-foreground'
-                : 'bg-muted text-muted-foreground hover:bg-muted/80'
-            }`}
-          >
-            {type === 'all' ? 'Todas' : type === 'critical' ? 'Críticas' : type === 'warning' ? 'Advertencias' : 'Informativas'}
-          </button>
-        ))}
-      </div>
+            {/* Description */}
+            <div>
+              <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Descripcion</h3>
+              <p className="text-sm text-foreground leading-relaxed">{selectedAlert.message}</p>
+            </div>
 
-      {/* Alerts List */}
-      <div className="flex-1 overflow-auto px-6 py-4 space-y-2">
-        {filteredAlerts.length > 0 ? (
-          filteredAlerts.map((alert) => (
-            <Card key={alert.id} className={`border-0 p-3 ${getAlertColor(alert.type)}`}>
-              <div className="flex items-start gap-3">
-                <div className="flex-shrink-0 mt-0.5">{getAlertIcon(alert.type)}</div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-start justify-between gap-2">
-                    <div>
-                      <p className="text-xs font-semibold text-foreground">{alert.title}</p>
-                      <p className="text-xs text-muted-foreground mt-0.5">{alert.message}</p>
-                    </div>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setDismissedAlerts([...dismissedAlerts, alert.id])}
-                      className="h-6 w-6 p-0 flex-shrink-0 hover:bg-black/10 dark:hover:bg-white/10"
-                    >
-                      <Trash2 className="h-3 w-3" />
-                    </Button>
+            {/* Details Grid */}
+            <div className="grid grid-cols-2 gap-3">
+              <div className="bg-muted/50 rounded-lg p-3">
+                <p className="text-xs text-muted-foreground">Zona</p>
+                <p className="text-sm font-semibold text-foreground">{selectedAlert.zone === '-' ? 'Sistema' : `Zona ${selectedAlert.zone}`}</p>
+              </div>
+              <div className="bg-muted/50 rounded-lg p-3">
+                <p className="text-xs text-muted-foreground">Estacion</p>
+                <p className="text-sm font-semibold text-foreground">{selectedAlert.station}</p>
+              </div>
+              <div className="bg-muted/50 rounded-lg p-3">
+                <p className="text-xs text-muted-foreground">Categoria</p>
+                <p className="text-sm font-semibold text-foreground capitalize">{selectedAlert.category}</p>
+              </div>
+              <div className="bg-muted/50 rounded-lg p-3">
+                <p className="text-xs text-muted-foreground">Estado</p>
+                <p className="text-sm font-semibold text-foreground">{selectedAlert.read ? 'Leida' : 'Nueva'}</p>
+              </div>
+            </div>
+
+            {/* Timeline */}
+            <div>
+              <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Historial</h3>
+              <div className="space-y-3">
+                <div className="flex items-start gap-3">
+                  <div className="h-2 w-2 rounded-full bg-primary mt-1.5" />
+                  <div>
+                    <p className="text-sm text-foreground">Alerta generada</p>
+                    <p className="text-xs text-muted-foreground">{selectedAlert.time}</p>
                   </div>
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className="text-xs text-muted-foreground">{alert.time}</span>
-                    {alert.zone !== '-' && <span className="text-xs bg-primary/20 text-primary px-1.5 py-0.5 rounded">Zona {alert.zone}</span>}
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="h-2 w-2 rounded-full bg-muted-foreground mt-1.5" />
+                  <div>
+                    <p className="text-sm text-foreground">Notificacion enviada</p>
+                    <p className="text-xs text-muted-foreground">Automatico</p>
                   </div>
                 </div>
               </div>
-            </Card>
-          ))
-        ) : (
-          <div className="flex items-center justify-center h-full">
-            <p className="text-xs text-muted-foreground">Sin alertas en este momento</p>
+            </div>
+
+            {/* Actions */}
+            {selectedAlert.actions && (
+              <div>
+                <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Acciones rapidas</h3>
+                <div className="space-y-2">
+                  {selectedAlert.actions.map((action, idx) => (
+                    <Button
+                      key={idx}
+                      variant={idx === 0 ? 'default' : 'outline'}
+                      className={`w-full justify-between ${idx === 0 ? 'bg-primary hover:bg-primary/90' : ''}`}
+                    >
+                      {action.label}
+                      <ChevronRight className="h-4 w-4" />
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   )
 }
