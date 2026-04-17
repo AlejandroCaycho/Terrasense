@@ -333,55 +333,51 @@ export default function ReportsPage() {
         </div>
 
         {/* Stats Cards */}
-        <div className="flex-shrink-0 grid grid-cols-4 gap-4 p-6 border-b border-border">
-          <Card className="border-0 bg-gradient-to-br from-primary/10 to-primary/5 p-4 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-20 h-20 bg-primary/10 rounded-full -mr-10 -mt-10" />
-            <div className="flex items-center gap-4 relative">
-              <div className="h-12 w-12 rounded-xl bg-primary/20 flex items-center justify-center">
-                <FileText className="h-6 w-6 text-primary" />
+        <div className="flex-shrink-0 grid grid-cols-4 gap-2 px-6 py-3 border-b border-border">
+          <Card className="border-0 bg-card/80 p-3 shadow-sm">
+            <div className="flex items-center gap-2">
+              <div className="rounded-lg bg-primary/20 p-1.5 flex-shrink-0">
+                <FileText className="h-4 w-4 text-primary" />
               </div>
               <div>
-                <p className="text-3xl font-bold text-primary">{readyCount}</p>
-                <p className="text-sm text-muted-foreground">Reportes listos</p>
+                <p className="text-xs text-muted-foreground">Reportes listos</p>
+                <p className="text-lg font-bold text-foreground">{readyCount}</p>
               </div>
             </div>
           </Card>
           
-          <Card className="border-0 bg-gradient-to-br from-amber-500/10 to-amber-600/5 p-4 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-20 h-20 bg-amber-500/10 rounded-full -mr-10 -mt-10" />
-            <div className="flex items-center gap-4 relative">
-              <div className="h-12 w-12 rounded-xl bg-amber-500/20 flex items-center justify-center">
-                <Loader2 className="h-6 w-6 text-amber-500" />
+          <Card className="border-0 bg-card/80 p-3 shadow-sm">
+            <div className="flex items-center gap-2">
+              <div className="rounded-lg bg-accent/20 p-1.5 flex-shrink-0">
+                <Loader2 className="h-4 w-4 text-accent" />
               </div>
               <div>
-                <p className="text-3xl font-bold text-amber-500">{processingCount}</p>
-                <p className="text-sm text-muted-foreground">En proceso</p>
+                <p className="text-xs text-muted-foreground">En proceso</p>
+                <p className="text-lg font-bold text-foreground">{processingCount}</p>
               </div>
             </div>
           </Card>
           
-          <Card className="border-0 bg-gradient-to-br from-blue-500/10 to-blue-600/5 p-4 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-20 h-20 bg-blue-500/10 rounded-full -mr-10 -mt-10" />
-            <div className="flex items-center gap-4 relative">
-              <div className="h-12 w-12 rounded-xl bg-blue-500/20 flex items-center justify-center">
-                <Calendar className="h-6 w-6 text-blue-500" />
+          <Card className="border-0 bg-card/80 p-3 shadow-sm">
+            <div className="flex items-center gap-2">
+              <div className="rounded-lg bg-secondary/20 p-1.5 flex-shrink-0">
+                <Calendar className="h-4 w-4 text-secondary" />
               </div>
               <div>
-                <p className="text-3xl font-bold text-blue-500">{scheduledCount}</p>
-                <p className="text-sm text-muted-foreground">Programados</p>
+                <p className="text-xs text-muted-foreground">Programados</p>
+                <p className="text-lg font-bold text-foreground">{scheduledCount}</p>
               </div>
             </div>
           </Card>
 
-          <Card className="border-0 bg-gradient-to-br from-emerald-500/10 to-emerald-600/5 p-4 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-20 h-20 bg-emerald-500/10 rounded-full -mr-10 -mt-10" />
-            <div className="flex items-center gap-4 relative">
-              <div className="h-12 w-12 rounded-xl bg-emerald-500/20 flex items-center justify-center">
-                <TrendingUp className="h-6 w-6 text-emerald-500" />
+          <Card className="border-0 bg-card/80 p-3 shadow-sm">
+            <div className="flex items-center gap-2">
+              <div className="rounded-lg bg-destructive/20 p-1.5 flex-shrink-0">
+                <TrendingUp className="h-4 w-4 text-destructive" />
               </div>
               <div>
-                <p className="text-3xl font-bold text-emerald-500">1.2TB</p>
-                <p className="text-sm text-muted-foreground">Datos procesados</p>
+                <p className="text-xs text-muted-foreground">Datos procesados</p>
+                <p className="text-lg font-bold text-foreground">1.2TB</p>
               </div>
             </div>
           </Card>

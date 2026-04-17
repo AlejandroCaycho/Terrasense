@@ -290,58 +290,54 @@ export default function AlertsPage() {
         </div>
 
         {/* Stats Cards */}
-        <div className="flex-shrink-0 grid grid-cols-4 gap-4 p-6 border-b border-border">
-          <Card className="border-0 bg-gradient-to-br from-red-500/10 to-red-600/5 p-4 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-20 h-20 bg-red-500/10 rounded-full -mr-10 -mt-10" />
-            <div className="flex items-center gap-4 relative">
-              <div className="h-12 w-12 rounded-xl bg-red-500/20 flex items-center justify-center">
-                <XCircle className="h-6 w-6 text-red-500" />
+        <div className="flex-shrink-0 grid grid-cols-4 gap-2 px-6 py-3 border-b border-border">
+          <Card className="border-0 bg-card/80 p-3 shadow-sm relative">
+            <div className="flex items-center gap-2">
+              <div className="rounded-lg bg-destructive/20 p-1.5 flex-shrink-0">
+                <XCircle className="h-4 w-4 text-destructive" />
               </div>
               <div>
-                <p className="text-3xl font-bold text-red-500">{criticalCount}</p>
-                <p className="text-sm text-muted-foreground">Criticas</p>
+                <p className="text-xs text-muted-foreground">Criticas</p>
+                <p className="text-lg font-bold text-foreground">{criticalCount}</p>
               </div>
             </div>
             {criticalCount > 0 && (
-              <div className="absolute top-2 right-2 h-3 w-3 rounded-full bg-red-500 animate-ping" />
+              <div className="absolute top-2 right-2 h-2 w-2 rounded-full bg-destructive animate-ping" />
             )}
           </Card>
           
-          <Card className="border-0 bg-gradient-to-br from-amber-500/10 to-amber-600/5 p-4 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-20 h-20 bg-amber-500/10 rounded-full -mr-10 -mt-10" />
-            <div className="flex items-center gap-4 relative">
-              <div className="h-12 w-12 rounded-xl bg-amber-500/20 flex items-center justify-center">
-                <AlertTriangle className="h-6 w-6 text-amber-500" />
+          <Card className="border-0 bg-card/80 p-3 shadow-sm">
+            <div className="flex items-center gap-2">
+              <div className="rounded-lg bg-accent/20 p-1.5 flex-shrink-0">
+                <AlertTriangle className="h-4 w-4 text-accent" />
               </div>
               <div>
-                <p className="text-3xl font-bold text-amber-500">{warningCount}</p>
-                <p className="text-sm text-muted-foreground">Advertencias</p>
+                <p className="text-xs text-muted-foreground">Advertencias</p>
+                <p className="text-lg font-bold text-foreground">{warningCount}</p>
               </div>
             </div>
           </Card>
           
-          <Card className="border-0 bg-gradient-to-br from-blue-500/10 to-blue-600/5 p-4 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-20 h-20 bg-blue-500/10 rounded-full -mr-10 -mt-10" />
-            <div className="flex items-center gap-4 relative">
-              <div className="h-12 w-12 rounded-xl bg-blue-500/20 flex items-center justify-center">
-                <Bell className="h-6 w-6 text-blue-500" />
+          <Card className="border-0 bg-card/80 p-3 shadow-sm">
+            <div className="flex items-center gap-2">
+              <div className="rounded-lg bg-secondary/20 p-1.5 flex-shrink-0">
+                <Bell className="h-4 w-4 text-secondary" />
               </div>
               <div>
-                <p className="text-3xl font-bold text-blue-500">{infoCount}</p>
-                <p className="text-sm text-muted-foreground">Informativas</p>
+                <p className="text-xs text-muted-foreground">Informativas</p>
+                <p className="text-lg font-bold text-foreground">{infoCount}</p>
               </div>
             </div>
           </Card>
 
-          <Card className="border-0 bg-gradient-to-br from-primary/10 to-primary/5 p-4 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-20 h-20 bg-primary/10 rounded-full -mr-10 -mt-10" />
-            <div className="flex items-center gap-4 relative">
-              <div className="h-12 w-12 rounded-xl bg-primary/20 flex items-center justify-center">
-                <Shield className="h-6 w-6 text-primary" />
+          <Card className="border-0 bg-card/80 p-3 shadow-sm">
+            <div className="flex items-center gap-2">
+              <div className="rounded-lg bg-primary/20 p-1.5 flex-shrink-0">
+                <Shield className="h-4 w-4 text-primary" />
               </div>
               <div>
-                <p className="text-3xl font-bold text-primary">98%</p>
-                <p className="text-sm text-muted-foreground">Sistema estable</p>
+                <p className="text-xs text-muted-foreground">Sistema estable</p>
+                <p className="text-lg font-bold text-foreground">98%</p>
               </div>
             </div>
           </Card>
