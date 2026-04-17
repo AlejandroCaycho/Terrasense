@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { LineChart, Line, BarChart, Bar, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import { Cloud, Droplets, Thermometer, AlertTriangle, TrendingUp, Wind, Activity, MapPin, Sun, Zap, Leaf, Clock } from 'lucide-react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -29,7 +29,7 @@ export default function DashboardPage() {
     { day: 'Dom', rain: 0 },
   ]
 
-  const soilMoistureData = mockDashboardData.soilMoisture
+
   const cropHealthData = [
     { crop: 'Tomate', health: 'Excelente', percentage: 92, area: '2.5 ha', nextHarvest: '15 días' },
     { crop: 'Lechuga', health: 'Buena', percentage: 85, area: '1.8 ha', nextHarvest: '8 días' },
@@ -160,28 +160,7 @@ export default function DashboardPage() {
           </Card>
         </div>
 
-        {/* Row 3: Soil Moisture Area Chart */}
-        <Card className="border-0 bg-card/50 p-3 shadow-sm">
-          <h3 className="text-sm font-semibold text-foreground mb-2">Humedad del Suelo por Zona</h3>
-          <div className="grid grid-cols-3 gap-4">
-            {soilMoistureData.map((item) => (
-              <div key={item.zone} className="text-center">
-                <div className="relative w-full h-20 bg-border/20 rounded-lg overflow-hidden">
-                  <div 
-                    className="absolute bottom-0 w-full bg-secondary/60 transition-all duration-500"
-                    style={{ height: `${item.moisture}%` }}
-                  />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="text-lg font-bold text-foreground">{item.moisture}%</span>
-                  </div>
-                </div>
-                <p className="text-xs text-muted-foreground mt-1">{item.zone}</p>
-              </div>
-            ))}
-          </div>
-        </Card>
-
-        {/* Row 4: Cultivos Expanded */}
+        {/* Row 3: Cultivos Expanded */}
         <Card className="border-0 bg-card/50 p-3 shadow-sm">
           <div className="flex items-center gap-2 mb-3">
             <Leaf className="h-4 w-4 text-primary flex-shrink-0" />
