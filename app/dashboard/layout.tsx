@@ -5,7 +5,6 @@ import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
 import {
   BarChart3,
-  Cloud,
   Settings,
   LogOut,
   Menu,
@@ -38,8 +37,7 @@ import {
 
 const navItems = [
   { icon: Home, label: 'Inicio', href: '/dashboard' },
-  { icon: Cloud, label: 'Estaciones', href: '/dashboard/stations' },
-  { icon: Map, label: 'Mapa', href: '/dashboard/map' },
+  { icon: Map, label: 'Estaciones', href: '/dashboard/map' },
   { icon: Droplets, label: 'Riego', href: '/dashboard/irrigation' },
   { icon: BarChart3, label: 'Reportes', href: '/dashboard/reports' },
   { icon: AlertCircle, label: 'Alertas', href: '/dashboard/alerts', badge: 3 },
